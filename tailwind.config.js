@@ -16,6 +16,6 @@ module.exports = {
       },
     },
   },
-  darkMode: "class",
+  darkMode: "class", //darkmodu uygulamak için yapıyoruz
   plugins: [require("tw-elements/dist/plugin")],
 };
