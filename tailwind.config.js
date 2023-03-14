@@ -16,6 +16,6 @@ module.exports = {
       },
     },
   },
-  darkMode: "class", //darkmodu uygulamak için yapıyoruz
+  darkMode: "class", //darkmodu uygulamak için yapıyoruz birde index.html ye class="dark" diyoruz.
   plugins: [require("tw-elements/dist/plugin")],
 };
