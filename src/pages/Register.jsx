@@ -1,79 +1,60 @@
-import React from "react";
-import GoogleIcon from "../assets/icons/GoogleIcon";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import React, { createContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../auth/firebase";
 
-const Register = () => {
-  return (
-    <div className="overflow-hidden flex-1 h-screen justify-center items-center bg-[#23242a]">
-      <div className={`form-container mt-[5vh] w-[380px] h-[580px]`}>
-        <form >
+// export const {Provider} = createContext()
+export const AuthContext = createContext();
+//* with custom hook
+// export const useAuthContext = () => {
+//     return useContext(AuthContext);
+//   };
 
-          <h2 className="text-red-main text-2xl font-[500] text-center tracking-[0.1em] mb-3">
-            Sign Up
-          </h2>
+const AuthContextProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const createUser = async (email, password) => {
+    try {
+      //? yeni bir kullanıcı oluşturmak için kullanılan firebase metodu
+      let userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      navigate("/");
+      console.log(userCredential);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-          <div className="relative z-0 w-full mb-6 group">
-            <input
-              type="text"
-              name="floating_text"
-              className="peer"
-              placeholder=" "
-              required
-              
-            />
-            <label htmlFor="floating_email">First Name</label>
-          </div>
+  //* https://console.firebase.google.com/
+  //* => Authentication => sign-in-method => enable Email/password
+  //! Email/password ile girişi enable yap
+  const signIn = async (email, password) => {
+    //? mevcut kullanıcının giriş yapması için kullanılan firebase metodu
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-          <div className="relative z-0 w-full mb-6 group">
-            <input
-              name="floating_text"
-              type="text"
-              required
-              className="peer" // tailwinde özel class. 
-              placeholder=" "
-              
-            />
-            <label htmlFor="floating_text">Last Name</label>
-          </div>
+  const logOut = () => {
+    signOut(auth);
+  };
 
-          <div className="relative z-0 w-full mb-6 group">
-            <input
-              name="floating_email"
-              type="email"
-              className="peer"
-              placeholder=" "
-              required
-              
-            />
-            <label htmlFor="floating_email">Email</label>
-          </div>
-
-          <div className="relative z-0 w-full mb-6 group">
-            <input
-              name="floating_password"
-              type="password"
-              className="peer"
-              placeholder=" "
-              required
-              
-            />
-            <label htmlFor="floating_password">Password</label>
-          </div>
-
-          <button className="btn-danger" type="submit">
-            Register
-          </button>
-
-          <button
-            className="flex justify-between text-center btn-danger"
-            type="button"
-          >
-            Continue with Google
-            <GoogleIcon color="currentColor" />
-          </button>
-
-        </form>
-      </div>
-    </div>
-  );
+  const values = {
+    createUser,
+    signIn,
+    logOut,
+    currentUser: { displayName: "felix franko" },
+  };
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
-export default Register;
+
+export default AuthContextProvider;
