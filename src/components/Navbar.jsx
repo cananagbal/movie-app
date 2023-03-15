@@ -16,7 +16,7 @@ const Navbar = () => {
       >
         <div className="flex w-full flex-wrap items-center justify-between px-6">
           <Link className="pr-2 text-2xl font-semibold" to="/">
-            React Movie App
+            Canan's Movie App
           </Link>
 
           {/* Collapsible wrapper */}
